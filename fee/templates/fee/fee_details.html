@@ -1,11 +1,176 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Fee Details</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aacharya | Fee Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #1e3a8a;
+            --accent-blue: #3b82f6;
+            --bg-gray: #f8fafc;
+            --text-dark: #1e293b;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-gray);
+            margin: 0;
+            color: var(--text-dark);
+        }
+
+        /* Top Navigation Bar */
+        .navbar {
+            background-color: var(--primary-blue);
+            padding: 1rem 2rem;
+            color: var(--white);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .navbar .logo { font-weight: 600; font-size: 1.2rem; letter-spacing: 1px; }
+
+        /* Container */
+        .main-container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        /* Breadcrumbs */
+        .breadcrumbs {
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Portal Card */
+        .portal-card {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+        }
+
+        .card-header {
+            background: #f1f5f9;
+            padding: 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .card-body { padding: 2rem; }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-item {
+            padding: 1rem;
+            background: #f8fafc;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-blue);
+        }
+
+        .stat-label { font-size: 0.75rem; text-transform: uppercase; color: #64748b; font-weight: 600; }
+        .stat-value { font-size: 1.25rem; font-weight: 600; margin-top: 0.25rem; }
+
+        /* Upload Section */
+        .upload-section {
+            background: #eff6ff;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px dashed var(--accent-blue);
+        }
+
+        .file-input {
+            margin: 1rem 0;
+            display: block;
+            width: 100%;
+            font-size: 0.9rem;
+        }
+
+        .btn-submit {
+            background-color: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-submit:hover { background-color: var(--accent-blue); }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 99px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        .unpaid { background: #fee2e2; color: #991b1b; }
+        .paid { background: #dcfce7; color: #166534; }
+    </style>
 </head>
 <body>
-    <h1>Fee Information for {{ student_name }}</h1>
-    <p>Total Amount: ₹{{ fee_amount }}</p>
-    <p>Payment Status: <strong>{{ status }}</strong></p>
+
+    <nav class="navbar">
+        <div class="logo">AACHARYA LMS</div>
+        <div class="user-profile">Hello, {{ student_name }}</div>
+    </nav>
+
+    <div class="main-container">
+        <div class="breadcrumbs">
+            Dashboard / Finance / <strong>Fee Details</strong>
+        </div>
+
+        <div class="portal-card">
+            <div class="card-header">
+                <h2 style="margin:0;">Academic Fee Management</h2>
+            </div>
+            
+            <div class="card-body">
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-label">Student Name</div>
+                        <div class="stat-value">{{ student_name }}</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Amount Payable</div>
+                        <div class="stat-value">₹{{ fee_amount }}</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Current Status</div>
+                        <div class="stat-value">
+                            <span class="status-badge {% if status == 'Paid' %}paid{% else %}unpaid{% endif %}">
+                                {{ status }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="upload-section">
+                    <h3 style="margin-top:0;">Submit Payment Receipt</h3>
+                    <p style="font-size: 0.85rem; color: #475569;">Please upload a clear PDF or JPG of your bank transfer receipt.</p>
+                    
+                    <form action="" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input type="file" name="receipt_file" class="file-input" accept=".pdf,image/*" required>
+                        <button type="submit" class="btn-submit">Upload & Notify Admin</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>
